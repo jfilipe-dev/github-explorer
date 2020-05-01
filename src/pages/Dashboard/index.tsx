@@ -1,9 +1,46 @@
-import React from 'react';
+import React, { useState, FormEvent } from 'react';
 import { FiArrowRight, FiGithub, FiSearch } from 'react-icons/fi';
 
-import { Logo, Title, Form, Repositories } from './styles';
+import api from '../../services/api';
+
+import { Logo, Title, Form, Repositories, Error } from './styles';
+
+interface Repository {
+  full_name: string;
+  description: string;
+  owner: {
+    login: string;
+    avatar_url: string;
+  };
+}
 
 const Dashboard: React.FC = () => {
+  const [inputError, setInputError] = useState('');
+  const [newRepo, setNewRepo] = useState('');
+  const [repositories, setRepositories] = useState<Repository[]>([]);
+
+  async function handleAddRepository(
+    event: FormEvent<HTMLFormElement>,
+  ): Promise<void> {
+    event.preventDefault();
+
+    if (!newRepo) {
+      setInputError('Digite o autor/nome do repositório.');
+      return;
+    }
+
+    try {
+      const response = await api.get<Repository>(`/repos/${newRepo}`);
+
+      const repository = response.data;
+
+      setRepositories([...repositories, repository]);
+      setNewRepo('');
+    } catch (err) {
+      setInputError('Repositório não encontrado.');
+    }
+  }
+
   return (
     <>
       <Logo>
@@ -15,53 +52,39 @@ const Dashboard: React.FC = () => {
       </Logo>
       <Title>Explore repositórios no Github.</Title>
 
-      <Form>
-        <input type="text" placeholder="Digite o nome do repositório" />
+      <Form hasError={!!inputError} onSubmit={handleAddRepository}>
+        <input
+          value={newRepo}
+          onChange={(e) => {
+            setNewRepo(e.target.value);
+            setInputError('');
+          }}
+          type="text"
+          placeholder="Digite o nome do repositório"
+        />
         <button type="submit">
           Pesquisar
           <FiSearch size={22} />
         </button>
       </Form>
 
+      {inputError && <Error>{inputError}</Error>}
+
       <Repositories>
-        <a href="/repository">
-          <img
-            src="https://avatars3.githubusercontent.com/u/55659197?s=460&u=c0c3565ad51e676592c2b47436c7ae99cb902eef&v=4"
-            alt="João Filipe"
-          />
-          <div>
-            <strong>Github explorer</strong>
-            <p>An explorer of github repositories</p>
-          </div>
+        {repositories.map((repository) => (
+          <a key={repository.full_name} href="/repository">
+            <img
+              src={repository.owner.avatar_url}
+              alt={repository.owner.login}
+            />
+            <div>
+              <strong>{repository.full_name}</strong>
+              <p>{repository.description}</p>
+            </div>
 
-          <FiArrowRight size={25} />
-        </a>
-
-        <a href="/repository">
-          <img
-            src="https://avatars3.githubusercontent.com/u/55659197?s=460&u=c0c3565ad51e676592c2b47436c7ae99cb902eef&v=4"
-            alt="João Filipe"
-          />
-          <div>
-            <strong>Github explorer</strong>
-            <p>An explorer of github repositories</p>
-          </div>
-
-          <FiArrowRight size={25} />
-        </a>
-
-        <a href="/repository">
-          <img
-            src="https://avatars3.githubusercontent.com/u/55659197?s=460&u=c0c3565ad51e676592c2b47436c7ae99cb902eef&v=4"
-            alt="João Filipe"
-          />
-          <div>
-            <strong>Github explorer</strong>
-            <p>An explorer of github repositories</p>
-          </div>
-
-          <FiArrowRight size={25} />
-        </a>
+            <FiArrowRight size={25} />
+          </a>
+        ))}
       </Repositories>
     </>
   );
