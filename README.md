@@ -1,7 +1,6 @@
 <h1 align="center">
 Github explorer
-<h1/>  
-
+<h1/>
   <h3 align="center">
 An explorer of github repositories.
 <h3/>
