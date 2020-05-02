@@ -1,5 +1,8 @@
 # Github explorer
-##### An explorer of github repositories.
+#### An explorer of github repositories.
+
+### 📺 Preview
+![Preview](https://user-images.githubusercontent.com/55659197/80868761-ebe47600-8c72-11ea-8d9f-dcc7a648f8f8.gif)
 
 ### 👨🏻‍💻 Stack and extensions
 - React with typescript
@@ -23,4 +26,3 @@
 
 3. Start the aplication - 
 `yarn start`
-
