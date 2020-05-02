@@ -2,7 +2,7 @@
 #### An explorer of github repositories.
 
 ### 📺 Preview
-![Preview](https://user-images.githubusercontent.com/55659197/80868761-ebe47600-8c72-11ea-8d9f-dcc7a648f8f8.gif)
+![preview-github-explorer](https://user-images.githubusercontent.com/55659197/80869064-94470a00-8c74-11ea-891d-6b7219fcb927.gif)
 
 ### 👨🏻‍💻 Stack and extensions
 - React with typescript
